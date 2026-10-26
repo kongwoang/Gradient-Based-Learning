@@ -1,24 +1,8 @@
 # Gradient-Based Learning
 
-Repo đọc paper, ghi comment và reproduce các phương pháp học dựa trên gradient.
+## Papers
 
-**[Bảng comment](papers/COMMENTS.md)** — một dòng mỗi bài, cập nhật trực tiếp trên GitHub.
-
-```text
-papers/
-├── MTL/          # Multi-task learning
-├── CL/           # Continual learning
-├── Multimodal/
-├── DG/           # Domain generalization
-├── FL/           # Federated learning
-└── COMMENTS.md
-```
-
-Mỗi bài là một folder `Venue-Year_Topic_Method/`, gồm PDF cùng tên và README ngắn với link nguồn/code tác giả. Khi reproduce, thêm `code/` trong folder bài đó; ghi cách chạy và kết quả vào README của bài. Dataset, checkpoint và log không đưa lên Git.
-
-## Danh sách bài
-
-| # | Topic | Venue | Method / bài | Hướng nghiên cứu |
+| # | Topic | Venue | Method / Paper | Focus |
 |---|---|---|---|---|
 | 1 | MTL | ICML 2018 | [GradNorm](papers/MTL/ICML-2018_MTL_GradNorm/) | Gradient balancing |
 | 2 | MTL | NeurIPS 2020 | [PCGrad](papers/MTL/NeurIPS-2020_MTL_PCGrad/) | Gradient surgery / conflict |
@@ -39,7 +23,3 @@ Mỗi bài là một folder `Venue-Year_Topic_Method/`, gồm PDF cùng tên và
 | 17 | DG | CVPR 2023 | [SAGM](papers/DG/CVPR-2023_DG_SAGM/) | Sharpness-aware optimization |
 | 18 | DG | CVPR 2025 | [GGA](papers/DG/CVPR-2025_DG_GGA/) | Gradient alignment / annealing |
 | 19 | FL | CVPR 2023 | [GradMA](papers/FL/CVPR-2023_FL_GradMA/) | Gradient memory / update correction |
-
-Thêm bài: tạo folder theo quy ước trên, thêm một dòng vào danh sách và bảng comment.
-
-Tham khảo cách tổ chức: [Papers We Love](https://github.com/papers-we-love/papers-we-love), [Deep Learning Paper Notes](https://github.com/cjmcv/deeplearning-paper-notes). PDF thuộc tác giả và đơn vị xuất bản tương ứng.

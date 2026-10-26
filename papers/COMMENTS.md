@@ -1,10 +1,8 @@
-# Comment khi đọc paper
+# Reading Comments
 
-[Danh sách bài](../README.md) · Ghi ngắn trực tiếp vào bảng; dùng `<br>` khi cần xuống dòng trong một ô.
+[Papers](../README.md)
 
-Trạng thái tùy chọn: `Chưa đọc`, `Đang đọc`, `Đã đọc`, `Reproduce`. Các ô để trống để bạn tự cập nhật.
-
-| # | Bài | Trạng thái | Comment / câu hỏi / ý tưởng |
+| # | Paper | Status | Comments / Questions / Ideas |
 |---|---|---|---|
 | 1 | [GradNorm — ICML 2018](MTL/ICML-2018_MTL_GradNorm/) | | |
 | 2 | [PCGrad — NeurIPS 2020](MTL/NeurIPS-2020_MTL_PCGrad/) | | |
