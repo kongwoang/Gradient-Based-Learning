@@ -1,0 +1,28 @@
+# Python / notebooks
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Local config / editor files
+.DS_Store
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+
+# Reproduction data and generated artifacts
+data/
+datasets/
+checkpoints/
+outputs/
+runs/
+wandb/
+logs/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
