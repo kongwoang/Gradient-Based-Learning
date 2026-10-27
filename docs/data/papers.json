@@ -19,7 +19,7 @@
     "notes": "",
     "source": "https://proceedings.mlr.press/v80/chen18a.html",
     "code": "",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/MTL/ICML-2018_MTL_GradNorm/ICML-2018_MTL_GradNorm.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/MTL/ICML-2018_MTL_GradNorm/ICML-2018_MTL_GradNorm.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/MTL/ICML-2018_MTL_GradNorm/",
     "updatedAt": null
   },
@@ -43,7 +43,7 @@
     "notes": "",
     "source": "https://proceedings.neurips.cc/paper_files/paper/2020/hash/3fe78a8acf5fda99de95303940a2420c-Abstract.html",
     "code": "https://github.com/tianheyu927/PCGrad",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/MTL/NeurIPS-2020_MTL_PCGrad/NeurIPS-2020_MTL_PCGrad.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/MTL/NeurIPS-2020_MTL_PCGrad/NeurIPS-2020_MTL_PCGrad.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/MTL/NeurIPS-2020_MTL_PCGrad/",
     "updatedAt": null
   },
@@ -67,7 +67,7 @@
     "notes": "",
     "source": "https://proceedings.neurips.cc/paper_files/paper/2021/hash/9d27fdf2477ffbff837d73ef7ae23db9-Abstract.html",
     "code": "https://github.com/Cranial-XIX/CAGrad",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/MTL/NeurIPS-2021_MTL_CAGrad/NeurIPS-2021_MTL_CAGrad.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/MTL/NeurIPS-2021_MTL_CAGrad/NeurIPS-2021_MTL_CAGrad.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/MTL/NeurIPS-2021_MTL_CAGrad/",
     "updatedAt": null
   },
@@ -91,7 +91,7 @@
     "notes": "",
     "source": "https://openreview.net/forum?id=T8wHz4rnuGL",
     "code": "https://github.com/adrianjav/rotograd",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/MTL/ICLR-2022_MTL_RotoGrad/ICLR-2022_MTL_RotoGrad.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/MTL/ICLR-2022_MTL_RotoGrad/ICLR-2022_MTL_RotoGrad.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/MTL/ICLR-2022_MTL_RotoGrad/",
     "updatedAt": null
   },
@@ -115,7 +115,7 @@
     "notes": "",
     "source": "https://openreview.net/forum?id=3AOj0RCNC2",
     "code": "https://github.com/sahagobinda/GPM",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/ICLR-2021_CL_GPM/ICLR-2021_CL_GPM.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/CL/ICLR-2021_CL_GPM/ICLR-2021_CL_GPM.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/ICLR-2021_CL_GPM/",
     "updatedAt": null
   },
@@ -139,7 +139,7 @@
     "notes": "",
     "source": "https://openaccess.thecvf.com/content/CVPR2022/html/Tiwari_GCR_Gradient_Coreset_Based_Replay_Buffer_Selection_for_Continual_Learning_CVPR_2022_paper.html",
     "code": "https://github.com/google-research/google-research/tree/master/gradient_coresets_replay",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/CVPR-2022_CL_GCR/CVPR-2022_CL_GCR.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/CL/CVPR-2022_CL_GCR/CVPR-2022_CL_GCR.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/CVPR-2022_CL_GCR/",
     "updatedAt": null
   },
@@ -163,7 +163,7 @@
     "notes": "",
     "source": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/80133d0f6eccaace15508f91e3c5a93c-Abstract-Conference.html",
     "code": "https://github.com/neu-spiral/SparCL",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/NeurIPS-2022_CL_SparCL/NeurIPS-2022_CL_SparCL.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/CL/NeurIPS-2022_CL_SparCL/NeurIPS-2022_CL_SparCL.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/NeurIPS-2022_CL_SparCL/",
     "updatedAt": null
   },
@@ -187,7 +187,7 @@
     "notes": "",
     "source": "https://ojs.aaai.org/index.php/AAAI/article/view/26157",
     "code": "https://github.com/sahagobinda/sgp",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/AAAI-2023_CL_SGP/AAAI-2023_CL_SGP.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/CL/AAAI-2023_CL_SGP/AAAI-2023_CL_SGP.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/AAAI-2023_CL_SGP/",
     "updatedAt": null
   },
@@ -211,7 +211,7 @@
     "notes": "",
     "source": "https://openaccess.thecvf.com/content/CVPR2023/html/Zhao_Rethinking_Gradient_Projection_Continual_Learning_Stability__Plasticity_Feature_Space_CVPR_2023_paper.html",
     "code": "",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/CVPR-2023_CL_SD/CVPR-2023_CL_SD.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/CL/CVPR-2023_CL_SD/CVPR-2023_CL_SD.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/CVPR-2023_CL_SD/",
     "updatedAt": null
   },
@@ -235,7 +235,7 @@
     "notes": "",
     "source": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/dc3ca8bcd613e43ce540352b58d55d6d-Abstract-Conference.html",
     "code": "https://github.com/MaolinLuo/KeepLoRA",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/ICLR-2026_CL_KeepLoRA/ICLR-2026_CL_KeepLoRA.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/CL/ICLR-2026_CL_KeepLoRA/ICLR-2026_CL_KeepLoRA.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/CL/ICLR-2026_CL_KeepLoRA/",
     "updatedAt": null
   },
@@ -259,7 +259,7 @@
     "notes": "",
     "source": "https://openaccess.thecvf.com/content/CVPR2022/html/Peng_Balanced_Multimodal_Learning_via_On-the-Fly_Gradient_Modulation_CVPR_2022_paper.html",
     "code": "https://github.com/GeWu-Lab/OGM-GE_CVPR2022",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/CVPR-2022_Multimodal_OGM-GE/CVPR-2022_Multimodal_OGM-GE.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/Multimodal/CVPR-2022_Multimodal_OGM-GE/CVPR-2022_Multimodal_OGM-GE.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/CVPR-2022_Multimodal_OGM-GE/",
     "updatedAt": null
   },
@@ -283,7 +283,7 @@
     "notes": "",
     "source": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/eacad5b8e67850f2b8dd33d87691d097-Abstract-Conference.html",
     "code": "",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/NeurIPS-2022_Multimodal_Cross-Modality-Gradient-Harmonization/NeurIPS-2022_Multimodal_Cross-Modality-Gradient-Harmonization.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/Multimodal/NeurIPS-2022_Multimodal_Cross-Modality-Gradient-Harmonization/NeurIPS-2022_Multimodal_Cross-Modality-Gradient-Harmonization.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/NeurIPS-2022_Multimodal_Cross-Modality-Gradient-Harmonization/",
     "updatedAt": null
   },
@@ -307,7 +307,7 @@
     "notes": "",
     "source": "https://openaccess.thecvf.com/content/ICCV2023/html/Li_Boosting_Multi-modal_Model_Performance_with_Adaptive_Gradient_Modulation_ICCV_2023_paper.html",
     "code": "https://github.com/lihongcs/AGM",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/ICCV-2023_Multimodal_AGM/ICCV-2023_Multimodal_AGM.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/Multimodal/ICCV-2023_Multimodal_AGM/ICCV-2023_Multimodal_AGM.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/ICCV-2023_Multimodal_AGM/",
     "updatedAt": null
   },
@@ -331,7 +331,7 @@
     "notes": "",
     "source": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/f0c68d99827dc09ed28aa073455efcbe-Abstract-Conference.html",
     "code": "https://github.com/zrguo/CGGM",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/NeurIPS-2024_Multimodal_CGGM/NeurIPS-2024_Multimodal_CGGM.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/Multimodal/NeurIPS-2024_Multimodal_CGGM/NeurIPS-2024_Multimodal_CGGM.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/NeurIPS-2024_Multimodal_CGGM/",
     "updatedAt": null
   },
@@ -355,7 +355,7 @@
     "notes": "",
     "source": "https://openaccess.thecvf.com/content/ICCV2025/html/Wei_Boosting_Multimodal_Learning_via_Disentangled_Gradient_Learning_ICCV_2025_paper.html",
     "code": "https://github.com/shicaiwei123/ICCV2025-GDL",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/ICCV-2025_Multimodal_DGL/ICCV-2025_Multimodal_DGL.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/Multimodal/ICCV-2025_Multimodal_DGL/ICCV-2025_Multimodal_DGL.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/Multimodal/ICCV-2025_Multimodal_DGL/",
     "updatedAt": null
   },
@@ -379,7 +379,7 @@
     "notes": "",
     "source": "https://proceedings.mlr.press/v162/rame22a.html",
     "code": "https://github.com/alexrame/fishr",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/DG/ICML-2022_DG_Fishr/ICML-2022_DG_Fishr.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/DG/ICML-2022_DG_Fishr/ICML-2022_DG_Fishr.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/DG/ICML-2022_DG_Fishr/",
     "updatedAt": null
   },
@@ -403,7 +403,7 @@
     "notes": "",
     "source": "https://openaccess.thecvf.com/content/CVPR2023/html/Wang_Sharpness-Aware_Gradient_Matching_for_Domain_Generalization_CVPR_2023_paper.html",
     "code": "https://github.com/Wang-pengfei/SAGM",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/DG/CVPR-2023_DG_SAGM/CVPR-2023_DG_SAGM.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/DG/CVPR-2023_DG_SAGM/CVPR-2023_DG_SAGM.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/DG/CVPR-2023_DG_SAGM/",
     "updatedAt": null
   },
@@ -427,7 +427,7 @@
     "notes": "",
     "source": "https://openaccess.thecvf.com/content/CVPR2025/html/Ballas_Gradient-Guided_Annealing_for_Domain_Generalization_CVPR_2025_paper.html",
     "code": "https://github.com/aristotelisballas/GGA",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/DG/CVPR-2025_DG_GGA/CVPR-2025_DG_GGA.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/DG/CVPR-2025_DG_GGA/CVPR-2025_DG_GGA.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/DG/CVPR-2025_DG_GGA/",
     "updatedAt": null
   },
@@ -451,7 +451,7 @@
     "notes": "",
     "source": "https://openaccess.thecvf.com/content/CVPR2023/html/Luo_GradMA_A_Gradient-Memory-Based_Accelerated_Federated_Learning_With_Alleviated_Catastrophic_Forgetting_CVPR_2023_paper.html",
     "code": "https://github.com/lkyddd/GradMA",
-    "pdf": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/FL/CVPR-2023_FL_GradMA/CVPR-2023_FL_GradMA.pdf",
+    "pdf": "https://kongwoang.github.io/Gradient-Based-Learning/papers/FL/CVPR-2023_FL_GradMA/CVPR-2023_FL_GradMA.pdf",
     "folder": "https://github.com/kongwoang/Gradient-Based-Learning/blob/main/papers/FL/CVPR-2023_FL_GradMA/",
     "updatedAt": null
   }

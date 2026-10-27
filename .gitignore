@@ -28,3 +28,6 @@ logs/
 *.pth
 *.ckpt
 *.safetensors
+
+# Generated GitHub Pages site
+/_site/

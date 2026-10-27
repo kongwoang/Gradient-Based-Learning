@@ -4,6 +4,7 @@ import json, re
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://github.com/kongwoang/Gradient-Based-Learning/blob/main/'
+SITE = 'https://kongwoang.github.io/Gradient-Based-Learning/'
 papers = []
 for line in (ROOT / 'README.md').read_text().splitlines():
     if not re.match(r'\| \d+ \|', line):
@@ -23,7 +24,7 @@ for line in (ROOT / 'README.md').read_text().splitlines():
         'categories': [focus], 'types': [], 'status': 'To read',
         'issues': '', 'motivation': '', 'contributions': '', 'ideas': '', 'notes': '',
         'source': links.get('Source', ''), 'code': links.get('Official code', ''),
-        'pdf': BASE + folder + links['PDF'], 'folder': BASE + folder,
+        'pdf': SITE + folder + links['PDF'], 'folder': BASE + folder,
         'updatedAt': None,
     })
 assert len(papers) == len(list((ROOT / 'papers').rglob('*.pdf')))

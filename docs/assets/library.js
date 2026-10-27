@@ -20,6 +20,17 @@ export function safeURL(value) {
 export function repositoryURL(paper, catalog = []) {
   return safeURL(paper.code || catalog.find(item => item.id === paper.id)?.code || '');
 }
+// Keep older local/cloud libraries working without rewriting the reader's data.
+export function pdfURL(paper) {
+  const value = safeURL(paper.pdf);
+  if (!value) return '';
+  const url = new URL(value);
+  const prefix = '/kongwoang/Gradient-Based-Learning/blob/main/';
+  if (url.origin === 'https://github.com' && url.pathname.startsWith(prefix + 'papers/') && url.pathname.endsWith('.pdf')) {
+    return 'https://kongwoang.github.io/Gradient-Based-Learning/' + url.pathname.slice(prefix.length) + url.hash;
+  }
+  return value;
+}
 export function normalizePaper(input) {
   if (!input || typeof input !== 'object' || !ID.test(input.id)) throw new Error('A paper has an invalid ID.');
   const result = { id: input.id };

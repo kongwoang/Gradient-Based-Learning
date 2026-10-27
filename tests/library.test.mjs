@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { initialWorkspace, normalizeWorkspace, normalizePaper, filteredPapers, addCatalogPapers, toMarkdown, safeURL, cacheKey, repositoryURL } from '../docs/assets/library.js';
+import { initialWorkspace, normalizeWorkspace, normalizePaper, filteredPapers, addCatalogPapers, toMarkdown, safeURL, cacheKey, repositoryURL, pdfURL } from '../docs/assets/library.js';
 import { writeCloud, readCloud, SyncConflict } from '../docs/assets/cloud.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../docs/data/papers.json',import.meta.url)));
 
 test('all 19 starter papers have a unique ID and valid PDF/source URLs',()=>{
   const state=initialWorkspace(catalog);assert.equal(state.papers.length,19);assert.equal(new Set(state.papers.map(p=>p.id)).size,19);
-  for(const paper of state.papers){assert.ok(paper.pdf.startsWith('https://github.com/kongwoang/'));assert.ok(paper.source.startsWith('https://'));}
+  for(const paper of state.papers){assert.ok(paper.pdf.startsWith('https://kongwoang.github.io/Gradient-Based-Learning/papers/'));assert.ok(paper.source.startsWith('https://'));}
 });
 test('backups preserve multiline notes and validate before replacing anything',()=>{
   const original=initialWorkspace(catalog);original.papers[0].notes='Question?\nTry α = 0.5 | compare with β.';
@@ -64,4 +64,17 @@ test('author repositories appear in saved libraries without replacing notes or u
   assert.equal(repositoryURL({...saved,id:'custom-paper'},catalog),'');
   assert.equal(repositoryURL({...saved,code:'https://example.com/author-code'},catalog),'https://example.com/author-code');
   assert.equal(repositoryURL({...saved,code:'javascript:alert(1)'},catalog),'');
+});
+
+test('old saved PDF links open the hosted file while custom links and notes stay intact',()=>{
+  for(const seed of catalog){
+    const old=seed.pdf.replace('https://kongwoang.github.io/Gradient-Based-Learning/','https://github.com/kongwoang/Gradient-Based-Learning/blob/main/');
+    const saved={...seed,pdf:old,notes:'My notes',status:'Reading'};
+    assert.equal(pdfURL(saved),seed.pdf);
+    assert.equal(saved.pdf,old);assert.equal(saved.notes,'My notes');assert.equal(saved.status,'Reading');
+    assert.equal(pdfURL({...saved,pdf:old+'?raw=true#page=3'}),seed.pdf+'#page=3');
+  }
+  assert.equal(pdfURL({pdf:'https://example.com/paper.pdf#page=2'}),'https://example.com/paper.pdf#page=2');
+  assert.equal(pdfURL({pdf:'https://github.com/other/repo/blob/main/paper.pdf'}),'https://github.com/other/repo/blob/main/paper.pdf');
+  assert.equal(pdfURL({pdf:''}),'');assert.equal(pdfURL({pdf:'javascript:alert(1)'}),'');
 });
