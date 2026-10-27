@@ -16,6 +16,10 @@ export function safeURL(value) {
     return url.href;
   } catch { return ''; }
 }
+// Newly verified author links also appear for previously saved workspaces.
+export function repositoryURL(paper, catalog = []) {
+  return safeURL(paper.code || catalog.find(item => item.id === paper.id)?.code || '');
+}
 export function normalizePaper(input) {
   if (!input || typeof input !== 'object' || !ID.test(input.id)) throw new Error('A paper has an invalid ID.');
   const result = { id: input.id };

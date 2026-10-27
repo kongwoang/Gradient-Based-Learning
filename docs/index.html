@@ -4,40 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f9f7">
-  <meta name="description" content="A quiet workspace for reading papers, connecting ideas, and tracking research.">
+  <meta name="description" content="Papers, research notes, and reproductions.">
   <title>Gradient — Paper Library</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/styles.css">
-  <script type="module" src="./assets/app.js"></script>
+  <link rel="stylesheet" href="./assets/styles.css?v=2">
+  <script type="module" src="./assets/app.js?v=2"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to papers</a>
-  <div class="app-shell">
-    <aside class="sidebar" id="sidebar" aria-label="Workspace navigation">
-      <a class="brand" href="./" aria-label="Gradient home"><span class="brand-mark">∇</span><span>gradient<span class="brand-dot">.</span></span></a>
-      <div class="workspace-label"><span class="workspace-icon" data-icon="notebook"></span><div>Research workspace<small>A place for your next idea</small></div></div>
-      <div class="nav-label">LIBRARY</div>
-      <nav id="topic-nav" aria-label="Paper topics"></nav>
-      <div class="sidebar-section"><span class="nav-label">YOUR PROGRESS</span><span id="progress-label">0 / 19 read</span><div class="progress-track"><div id="progress-bar"></div></div><p id="progress-caption">One paper at a time.</p></div>
-      <div class="sidebar-bottom"><a href="https://github.com/kongwoang/Gradient-Based-Learning" target="_blank" rel="noopener noreferrer"><span data-icon="github"></span> View repository <span data-icon="external"></span></a><button id="storage-help" type="button"><span class="live-dot"></span><span id="storage-label">Saved on this device</span><span data-icon="chevron-right"></span></button></div>
-    </aside>
-    <button id="sidebar-scrim" class="sidebar-scrim" aria-label="Close navigation" hidden></button>
-    <main id="main">
-      <header class="topbar"><div class="breadcrumb"><button class="icon-button mobile-menu" id="nav-toggle" aria-label="Open navigation"><span data-icon="menu"></span></button><span data-icon="library"></span><span>Workspace</span><span class="crumb-divider">/</span><strong id="breadcrumb-current">All papers</strong></div><button id="account-button" class="account-button"><span data-icon="cloud"></span><span id="account-label">Sign in to sync</span></button></header>
-      <div class="main-content">
-        <section class="page-heading"><div><div class="eyebrow">READ · CONNECT · EXPLORE</div><h1 id="page-title">Paper library<span class="title-dot">.</span></h1><p id="page-description">Gradient-based learning, one paper at a time.</p></div><button class="button primary" id="new-paper"><span data-icon="plus"></span>New paper</button></section>
-        <section class="metrics" aria-label="Reading progress" id="metrics"></section>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Gradient home"><span class="brand-mark">∇</span>Gradient</a>
+    <button id="account-button" class="account-button"><span data-icon="cloud"></span><span id="account-label">Sign in to sync</span></button>
+  </header>
+  <main id="main" class="main-content">
+    <section class="page-heading"><div><h1 id="page-title">Paper library</h1><p>Papers, notes, and reproductions.</p></div><button class="button primary" id="new-paper"><span data-icon="plus"></span>Add paper</button></section>
+    <nav id="topic-nav" class="topic-nav" aria-label="Paper topics"></nav>
         <section class="library-panel" aria-label="Papers">
-          <div class="view-row"><div class="view-tabs" role="tablist" aria-label="Table view"><button id="view-library" class="view-tab active" role="tab" aria-selected="true" data-view="library"><span data-icon="list"></span>Library</button><button id="view-research" class="view-tab" role="tab" aria-selected="false" data-view="research"><span data-icon="table"></span>Research notes</button></div><div class="view-hint" id="view-hint"><span data-icon="cursor"></span>Click a paper to make it yours</div></div>
-          <div class="toolbar"><label class="search-box"><span data-icon="search"></span><input id="search" type="search" placeholder="Search papers, methods, or ideas…" aria-label="Search papers"><kbd>/</kbd></label><div class="filters"><label class="select-control"><span data-icon="filter"></span><select id="status-filter" aria-label="Filter by status"><option value="All">All statuses</option><option>To read</option><option>Reading</option><option>Read</option><option>Reproducing</option><option>Reproduced</option></select></label><label class="select-control"><span data-icon="sort"></span><select id="sort-order" aria-label="Sort papers"><option value="default">Default order</option><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A–Z</option><option value="updated">Recently edited</option></select></label><div class="more-container"><button class="icon-button" id="more-button" aria-label="Backup and export" aria-expanded="false"><span data-icon="more"></span></button><div class="dropdown" id="more-menu" hidden><button id="export-json"><span data-icon="download"></span>Export backup<span>JSON</span></button><button id="export-markdown"><span data-icon="file"></span>Export notes<span>MD</span></button><div class="menu-rule"></div><button id="import-json"><span data-icon="upload"></span>Import backup</button></div></div></div></div>
+          <div class="view-row"><div class="view-tabs" role="tablist" aria-label="Table view"><button id="view-library" class="view-tab active" role="tab" aria-selected="true" data-view="library"><span data-icon="list"></span>Library</button><button id="view-research" class="view-tab" role="tab" aria-selected="false" data-view="research"><span data-icon="table"></span>Research notes</button></div></div>
+          <div class="toolbar"><label class="search-box"><span data-icon="search"></span><input id="search" type="search" placeholder="Search papers or notes…" aria-label="Search papers"><kbd>/</kbd></label><div class="filters"><label class="select-control"><span data-icon="filter"></span><select id="status-filter" aria-label="Filter by status"><option value="All">All statuses</option><option>To read</option><option>Reading</option><option>Read</option><option>Reproducing</option><option>Reproduced</option></select></label><label class="select-control"><span data-icon="sort"></span><select id="sort-order" aria-label="Sort papers"><option value="default">Default order</option><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A–Z</option><option value="updated">Recently edited</option></select></label><div class="more-container"><button class="icon-button" id="more-button" aria-label="Backup and export" aria-expanded="false"><span data-icon="more"></span></button><div class="dropdown" id="more-menu" hidden><button id="export-json"><span data-icon="download"></span>Export backup<span>JSON</span></button><button id="export-markdown"><span data-icon="file"></span>Export notes<span>MD</span></button><div class="menu-rule"></div><button id="import-json"><span data-icon="upload"></span>Import backup</button></div></div></div></div>
           <div id="notice" class="notice" hidden role="status"></div>
           <div class="table-scroll" id="table-scroll" tabindex="0" aria-label="Paper table. Scroll horizontally for more columns."><table id="paper-table"><thead id="table-head"></thead><tbody id="table-body"></tbody></table><div class="empty-state" id="empty-state" hidden><span data-icon="search"></span><h2>No papers found</h2><p>Try another search or clear your filters.</p><button class="button secondary" id="clear-filters">Clear filters</button></div><div id="loading" class="loading-state"><span class="spinner"></span>Opening your library…</div></div>
-          <footer class="table-footer"><span id="results-count">19 papers</span><span id="save-state" role="status"><span class="tiny-dot"></span>Your workspace, at your pace</span></footer>
+          <footer class="table-footer"><span id="results-count">19 papers</span><span id="save-state" role="status"><span class="tiny-dot"></span>Opening your library…</span></footer>
         </section>
-        <div class="page-footnote"><span data-icon="spark"></span><span>A good question is a good place to start.</span><span class="keyboard-tip">Press <kbd>/</kbd> to search</span></div>
-      </div>
-    </main>
-  </div>
+    <footer class="page-footer"><a href="https://github.com/kongwoang/Gradient-Based-Learning" target="_blank" rel="noopener noreferrer">Library on GitHub <span data-icon="external"></span></a></footer>
+  </main>
   <dialog id="paper-dialog" class="drawer" aria-labelledby="drawer-title"></dialog>
   <dialog id="cell-dialog" class="modal cell-modal" aria-labelledby="cell-title"></dialog>
   <dialog id="account-dialog" class="modal account-modal" aria-labelledby="account-title"></dialog>

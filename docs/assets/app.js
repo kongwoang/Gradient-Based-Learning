@@ -1,4 +1,4 @@
-import { STATUSES, TOPICS, TOPIC_NAMES, NOTE_FIELDS, normalizePaper, normalizeWorkspace, initialWorkspace, addCatalogPapers, filteredPapers, toMarkdown, cacheKey } from './library.js';
+import { STATUSES, TOPICS, TOPIC_NAMES, NOTE_FIELDS, normalizePaper, normalizeWorkspace, initialWorkspace, addCatalogPapers, filteredPapers, toMarkdown, cacheKey, repositoryURL } from './library.js?v=2';
 import { config } from '../config.js';
 import { loadClient, readCloud, writeCloud, SyncConflict } from './cloud.js';
 
@@ -77,7 +77,6 @@ function setSaveState() {
     label = sidebar;
   }
   $('#save-state').innerHTML = `<span class="tiny-dot"></span>${escape(label)}`;
-  $('#storage-label').textContent = storageOK ? sidebar : label;
   $('#account-label').textContent = user ? (user.email?.split('@')[0] || 'My account') : 'Sign in to sync';
   $('#account-button').title = user?.email || 'Sign in to sync your notes across devices';
 }
@@ -103,20 +102,21 @@ function noteCell(paper, field) {
   const content = Array.isArray(value) ? (value.length ? tags(value, field === 'types') : '<span class="placeholder">Add tags…</span>') : value ? `<span class="cell-text">${escape(value)}</span>` : '<span class="placeholder">Add a note…</span>';
   return `<td class="editable-cell"><button class="cell-button" data-edit="${field}" data-id="${paper.id}" aria-label="Edit ${escape(NOTE_FIELDS[field] || field)} for ${escape(paper.method || paper.title)}">${content}</button></td>`;
 }
+function resourceLinks(paper, compact = false) {
+  const resources = [['pdf','PDF','file'], ...(!compact ? [['source','Paper','external']] : []), ['code','Repository','github']];
+  return resources.map(([key,label,name]) => {
+    const url = key === 'code' ? repositoryURL(paper,catalog) : paper[key];
+    return url ? `<a href="${escape(url)}" target="_blank" rel="noopener noreferrer" aria-label="${label} for ${escape(paper.method || paper.title)}">${icon(name)}${label}</a>` : '';
+  }).join('');
+}
 function render() {
-  $('#topic-nav').innerHTML = `<button class="nav-item${filters.topic === 'All' ? ' active' : ''}" data-topic="All">${icon('library')}<span>All papers</span><span class="nav-count">${workspace.papers.length}</span></button><div class="topic-separator"></div>` + TOPICS.filter(topic => topic !== 'Other' || workspace.papers.some(p=>p.topic === topic)).map(topic=>`<button class="nav-item${filters.topic === topic ? ' active' : ''}" data-topic="${topic}" title="${TOPIC_NAMES[topic]}"><span class="topic-dot ${topic.toLowerCase()}"></span><span>${topic === 'MTL' ? 'Multi-task' : topic === 'CL' ? 'Continual' : topic === 'DG' ? 'Generalization' : topic === 'FL' ? 'Federated' : topic}</span><span class="nav-count">${workspace.papers.filter(p=>p.topic === topic).length}</span></button>`).join('');
-  const counts = { all: workspace.papers.length, reading: workspace.papers.filter(p=>p.status === 'Reading').length, read: workspace.papers.filter(p=>['Read','Reproduced'].includes(p.status)).length, reproducing: workspace.papers.filter(p=>p.status === 'Reproducing').length };
-  $('#metrics').innerHTML = [['All', counts.all, 'Papers'],['Reading',counts.reading,'Reading'],['Read',counts.read,'Read'],['Reproducing',counts.reproducing,'Reproducing']].map(([status,count,label])=>`<button class="metric${filters.status === status ? ' selected' : ''}" data-status="${status}" aria-label="Show ${label.toLowerCase()}"><span class="metric-number">${count.toString().padStart(2,'0')}</span><span class="metric-dot"></span><span class="metric-label">${label}</span></button>`).join('');
-  $('#progress-label').textContent = `${counts.read} / ${counts.all} read`;
-  $('#progress-bar').style.width = `${counts.all ? counts.read / counts.all * 100 : 0}%`;
-  $('#progress-caption').textContent = counts.read ? `${Math.round(counts.read / counts.all * 100)}% of your library explored.` : 'One paper at a time.';
-  $('#breadcrumb-current').textContent = filters.topic === 'All' ? 'All papers' : TOPIC_NAMES[filters.topic];
-  $('#page-title').innerHTML = `${escape(filters.topic === 'All' ? 'Paper library' : TOPIC_NAMES[filters.topic])}<span class="title-dot">.</span>`;
+  const topics = ['All', ...TOPICS.filter(topic => topic !== 'Other' || workspace.papers.some(p=>p.topic === topic))];
+  $('#topic-nav').innerHTML = topics.map(topic=>`<button class="nav-item${filters.topic === topic ? ' active' : ''}" data-topic="${topic}" aria-pressed="${filters.topic === topic}" title="${topic === 'All' ? 'All papers' : TOPIC_NAMES[topic]}">${topic === 'All' ? 'All papers' : topic === 'MTL' ? 'Multi-task' : topic === 'CL' ? 'Continual' : topic === 'DG' ? 'Generalization' : topic === 'FL' ? 'Federated' : topic}<span class="nav-count">${topic === 'All' ? workspace.papers.length : workspace.papers.filter(p=>p.topic === topic).length}</span></button>`).join('');
   const papers = filteredPapers(workspace.papers, filters);
-  const columns = view === 'library' ? [['bookmark','Paper'],['tag','Topic'],['file','Venue'],['check','Status'],['spark','Focus'],['note','Notes']] : [['bookmark','Paper'],['tag','Categories'],['filter','Type'],['note','Recent issues'],['spark','Motivations'],['list','Contributions'],['notebook','Ideas & next steps']];
+  const columns = view === 'library' ? ['Paper','Venue','Status','Notes','Links'] : ['Paper','Categories','Type','Recent issues','Motivations','Contributions','Ideas & next steps'];
   $('#paper-table').className = view === 'research' ? 'research-table' : '';
-  $('#table-head').innerHTML = '<tr>'+columns.map(([name,label])=>`<th scope="col"><span class="th-content">${icon(name)}${label}</span></th>`).join('')+'</tr>';
-  $('#table-body').innerHTML = papers.map((paper,index)=>`<tr><td><div class="paper-cell"><span class="paper-index">${String(index+1).padStart(2,'0')}</span><button class="paper-open" data-open="${paper.id}"><span class="paper-method">${escape(paper.method || paper.title)}${icon('external')}</span><span class="paper-title">${escape(paper.title)}</span></button></div></td>${view === 'library' ? `<td>${topicTag(paper.topic)}</td><td><div class="venue-name">${escape(paper.venue || '—')}</div><div class="venue-year">${paper.year || ''}</div></td><td><span class="status-wrap ${statusClass(paper.status)}"><select class="status-select" data-paper-status="${paper.id}" aria-label="Status for ${escape(paper.method || paper.title)}">${statusOptions(paper.status)}</select></span></td><td><span class="focus-text">${escape(paper.focus || '—')}</span></td>${noteCell(paper,'notes')}` : ['categories','types','issues','motivation','contributions','ideas'].map(field=>noteCell(paper,field)).join('')}</tr>`).join('');
+  $('#table-head').innerHTML = '<tr>'+columns.map(label=>`<th scope="col">${label}</th>`).join('')+'</tr>';
+  $('#table-body').innerHTML = papers.map(paper=>`<tr><td><button class="paper-open" data-open="${paper.id}"><span class="paper-method">${escape(paper.method || paper.title)}</span><span class="paper-title">${escape(paper.title)}</span></button><div class="paper-meta">${topicTag(paper.topic)}</div></td>${view === 'library' ? `<td><div class="venue-name">${escape(paper.venue || '—')}</div><div class="venue-year">${paper.year || ''}</div></td><td><span class="status-wrap ${statusClass(paper.status)}"><select class="status-select" data-paper-status="${paper.id}" aria-label="Status for ${escape(paper.method || paper.title)}">${statusOptions(paper.status)}</select></span></td>${noteCell(paper,'notes')}<td><div class="row-links">${resourceLinks(paper,true) || '<span class="placeholder">—</span>'}</div></td>` : ['categories','types','issues','motivation','contributions','ideas'].map(field=>noteCell(paper,field)).join('')}</tr>`).join('');
   $('#empty-state').hidden = papers.length > 0;
   $('#paper-table').hidden = papers.length === 0;
   $('#results-count').textContent = papers.length === workspace.papers.length ? `${papers.length} papers` : `${papers.length} of ${workspace.papers.length} papers`;
@@ -124,12 +124,10 @@ function render() {
   $('#sort-order').value = filters.sort;
   setSaveState();
 }
-function closeNavigation() { $('#sidebar').classList.remove('open'); $('#sidebar-scrim').hidden = true; }
 function resetFilters() { Object.assign(filters,{query:'',topic:'All',status:'All',sort:'default'}); $('#search').value = ''; render(); }
 function selectView(nextView) {
   view = nextView;
   document.querySelectorAll('[data-view]').forEach(button=>{ button.classList.toggle('active',button.dataset.view === view); button.setAttribute('aria-selected',button.dataset.view === view ? 'true' : 'false'); });
-  $('#view-hint').innerHTML = icon(view === 'research' ? 'note' : 'cursor') + (view === 'research' ? 'Click any note to start writing' : 'Click a paper to make it yours');
   $('#table-scroll').scrollLeft = 0; render();
 }
 function field(name,label,value='',options={}) {
@@ -169,8 +167,8 @@ function openPaper(id = null) {
   if (!paper) return;
   currentPaperId = paper.id; drawerIsNew = !id; drawerBaseline = id ? JSON.stringify({...normalizePaper(paper),updatedAt:null}) : ''; 
   const dialog = $('#paper-dialog');
-  const links = [['pdf','PDF','file'],['source','Source','external'],['code','Code','github'],['folder','Repository','notebook']].filter(([key])=>paper[key]).map(([key,label,name])=>`<a href="${escape(paper[key])}" target="_blank" rel="noopener noreferrer">${icon(name)}${label}</a>`).join('');
-  dialog.innerHTML = `<div class="drawer-header"><span class="drawer-kicker">${id ? 'PAPER DETAILS' : 'GROW YOUR LIBRARY'}</span><button class="icon-button" id="close-paper" aria-label="Close paper">${icon('close')}</button></div><form id="paper-form"><div class="drawer-content">${id ? topicTag(paper.topic) : ''}<h2 id="drawer-title">${escape(id ? paper.method || paper.title : 'A new discovery.')}</h2>${id ? `<p class="drawer-paper-title">${escape(paper.title)}</p><div class="resource-links">${links}</div>` : '<p class="drawer-paper-title">Add a paper you want to come back to.</p>'}<details${id ? '' : ' open'}><summary class="field-label">Paper details</summary>${field('title','Paper title',paper.title,{required:true,area:true,rows:2,max:2000})}${field('method','Method / short name',paper.method,{max:2000,placeholder:'e.g. GradNorm'})}<div class="form-row triple">${field('topic','Topic',paper.topic,{options:TOPICS})}${field('venue','Venue',paper.venue,{max:100,placeholder:'e.g. ICML'})}${field('year','Year',paper.year,{type:'number'})}</div>${field('focus','Research focus',paper.focus,{max:2000})}${field('source','Paper URL',paper.source,{type:'url'})}<div class="form-row">${field('pdf','PDF URL',paper.pdf,{type:'url'})}${field('code','Code URL',paper.code,{type:'url'})}</div></details><div class="section-heading">READING & ORGANIZATION</div><div class="form-row">${field('status','Reading status',paper.status,{options:STATUSES})}${field('types','Type',paper.types.join(', '),{placeholder:'Theoretical, Empirical…',hint:'Separate tags with commas.'})}</div>${field('categories','Categories',paper.categories.join(', '),{placeholder:'Gradient matching, Loss design…',hint:'Separate tags with commas.'})}<div class="section-heading">YOUR RESEARCH NOTES</div>${Object.entries(NOTE_FIELDS).map(([key,label])=>field(key,label,paper[key],{area:true,max:50000,placeholder:({issues:'What problem remains unsolved?',motivation:'Why does this paper matter?',contributions:'What does it add?',ideas:'What would you try next?',notes:'Questions, observations, useful details…'})[key]})).join('')}<p class="field-error" id="drawer-error" hidden></p></div><div class="drawer-actions">${id ? `<button class="delete-button" type="button" id="delete-paper">${icon('trash')}Remove paper</button>` : '<small>Every idea starts somewhere.</small>'}<div><small id="drawer-save-label">${id ? 'Edits save automatically' : ''}</small><button class="button primary" type="submit">${id ? 'Done' : 'Add paper'}</button></div></div></form>`;
+  const links = resourceLinks(paper);
+  dialog.innerHTML = `<div class="drawer-header"><span class="drawer-kicker">${id ? 'PAPER DETAILS' : 'NEW PAPER'}</span><button class="icon-button" id="close-paper" aria-label="Close paper">${icon('close')}</button></div><form id="paper-form"><div class="drawer-content">${id ? topicTag(paper.topic) : ''}<h2 id="drawer-title">${escape(id ? paper.method || paper.title : 'New paper')}</h2>${id ? `<p class="drawer-paper-title">${escape(paper.title)}</p><div class="resource-links">${links}</div>` : '<p class="drawer-paper-title">Add a title and any links you have.</p>'}<details${id ? '' : ' open'}><summary class="field-label">Paper details</summary>${field('title','Paper title',paper.title,{required:true,area:true,rows:2,max:2000})}${field('method','Method / short name',paper.method,{max:2000,placeholder:'e.g. GradNorm'})}<div class="form-row triple">${field('topic','Topic',paper.topic,{options:TOPICS})}${field('venue','Venue',paper.venue,{max:100,placeholder:'e.g. ICML'})}${field('year','Year',paper.year,{type:'number'})}</div>${field('focus','Research focus',paper.focus,{max:2000})}${field('source','Paper URL',paper.source,{type:'url'})}<div class="form-row">${field('pdf','PDF URL',paper.pdf,{type:'url'})}${field('code','Repository URL',repositoryURL(paper,catalog),{type:'url'})}</div></details><div class="section-heading">READING & ORGANIZATION</div><div class="form-row">${field('status','Reading status',paper.status,{options:STATUSES})}${field('types','Type',paper.types.join(', '),{placeholder:'Theoretical, Empirical…',hint:'Separate tags with commas.'})}</div>${field('categories','Categories',paper.categories.join(', '),{placeholder:'Gradient matching, Loss design…',hint:'Separate tags with commas.'})}<div class="section-heading">YOUR RESEARCH NOTES</div>${Object.entries(NOTE_FIELDS).map(([key,label])=>field(key,label,paper[key],{area:true,max:50000,placeholder:({issues:'What problem remains unsolved?',motivation:'Why does this paper matter?',contributions:'What does it add?',ideas:'What would you try next?',notes:'Questions, observations, useful details…'})[key]})).join('')}<p class="field-error" id="drawer-error" hidden></p></div><div class="drawer-actions">${id ? `<button class="delete-button" type="button" id="delete-paper">${icon('trash')}Remove paper</button>` : '<span></span>'}<div><small id="drawer-save-label">${id ? 'Edits save automatically' : ''}</small><button class="button primary" type="submit">${id ? 'Done' : 'Add paper'}</button></div></div></form>`;
   $('#close-paper').onclick = closePaper;
   dialog.oncancel = event=>{event.preventDefault();closePaper();};
   $('#paper-form').onsubmit = event=>{event.preventDefault();if(saveDrawer()){dialog.close();currentPaperId=null;notify(id ? 'Paper updated' : 'Paper added to your library');}};
@@ -187,7 +185,7 @@ function editCell(id, name) {
   const paper = workspace.papers.find(p=>p.id === id); if (!paper || changingAccount) return;
   const isTags = ['categories','types'].includes(name), label = NOTE_FIELDS[name] || (name === 'types' ? 'Type' : 'Categories');
   const dialog = $('#cell-dialog');
-  dialog.innerHTML = `<form id="cell-form"><div class="modal-header"><div><h2 id="cell-title">${label}</h2><p>${escape(paper.method || paper.title)}</p></div><button type="button" class="icon-button" id="close-cell" aria-label="Close note">${icon('close')}</button></div>${field('value',isTags ? 'Tags, separated by commas' : 'Your notes',isTags ? paper[name].join(', ') : paper[name],{area:!isTags,rows:8,max:isTags ? 2400 : 50000,placeholder:isTags ? 'Add a tag…' : 'Write freely. This is your space.'})}<p id="cell-error" class="field-error" hidden></p><div class="modal-actions"><button type="button" class="button secondary" id="cancel-cell">Cancel</button><button type="submit" class="button primary">Save note</button></div></form>`;
+  dialog.innerHTML = `<form id="cell-form"><div class="modal-header"><div><h2 id="cell-title">${label}</h2><p>${escape(paper.method || paper.title)}</p></div><button type="button" class="icon-button" id="close-cell" aria-label="Close note">${icon('close')}</button></div>${field('value',isTags ? 'Tags, separated by commas' : 'Your notes',isTags ? paper[name].join(', ') : paper[name],{area:!isTags,rows:8,max:isTags ? 2400 : 50000,placeholder:isTags ? 'Add a tag…' : 'Write a note…'})}<p id="cell-error" class="field-error" hidden></p><div class="modal-actions"><button type="button" class="button secondary" id="cancel-cell">Cancel</button><button type="submit" class="button primary">Save note</button></div></form>`;
   $('#close-cell').onclick = $('#cancel-cell').onclick = ()=>dialog.close();
   $('#cell-form').onsubmit = event=>{event.preventDefault();try{const value=$('#field-value').value;updatePaper(id,{[name]:isTags ? value.split(',').map(s=>s.trim()).filter(Boolean) : value});dialog.close();notify('Note saved');}catch(error){$('#cell-error').hidden=false;$('#cell-error').textContent=error.message;}};
   dialog.showModal(); $('#field-value').focus();
@@ -333,7 +331,7 @@ function accountError(message) { const el=$('#auth-error'); if(el){el.hidden=fal
 function showAccount() {
   const dialog=$('#account-dialog');
   if(user) {
-    dialog.innerHTML=`<div class="modal-header"><div><h2 id="account-title">Your workspace</h2><p>Your library follows you.</p></div><button class="icon-button" data-close-account aria-label="Close account">${icon('close')}</button></div><div class="account-badge"><strong>${escape(user.email || 'Signed in')}</strong>${escape(conflict ? 'Changes need your attention' : cloudError ? 'Saved locally · not synced yet' : dirty ? 'Local changes waiting to sync' : syncReady ? 'Your notes are synced' : 'Connecting…')}</div><div class="account-options"><button class="button primary" id="sync-account">${icon('refresh')}${conflict?'Review changes':'Sync now'}</button><button class="button secondary" id="backup-account">${icon('download')}Download a backup</button><button class="button text" id="signout">Sign out</button></div><p id="auth-error" class="field-error" hidden></p><div class="account-info">Only your account can access your notes. A backup is also kept in this browser.</div>`;
+    dialog.innerHTML=`<div class="modal-header"><div><h2 id="account-title">Your workspace</h2><p>Papers and notes saved to your account.</p></div><button class="icon-button" data-close-account aria-label="Close account">${icon('close')}</button></div><div class="account-badge"><strong>${escape(user.email || 'Signed in')}</strong>${escape(conflict ? 'Changes need your attention' : cloudError ? 'Saved locally · not synced yet' : dirty ? 'Local changes waiting to sync' : syncReady ? 'Your notes are synced' : 'Connecting…')}</div><div class="account-options"><button class="button primary" id="sync-account">${icon('refresh')}${conflict?'Review changes':'Sync now'}</button><button class="button secondary" id="backup-account">${icon('download')}Download a backup</button><button class="button text" id="signout">Sign out</button></div><p id="auth-error" class="field-error" hidden></p><div class="account-info">Only your account can access your notes. A backup is also kept in this browser.</div>`;
     $('#sync-account').onclick=async()=>{if(conflict)return showConflict();await refreshCloud();if(!conflict)showAccount();};
     $('#backup-account').onclick=downloadBackup;
     $('#signout').onclick=async()=>{
@@ -347,7 +345,7 @@ function showAccount() {
     $('#backup-account').onclick=downloadBackup;
   } else {
     const registering=authMode==='signup';
-    dialog.innerHTML=`<div class="modal-header"><div><div class="modal-icon">${icon('cloud')}</div><h2 id="account-title">${registering?'Make room for your ideas.':'Welcome back.'}</h2><p>${registering?'Create an account to sync your papers and notes.':'Sign in to pick up where you left off.'}</p></div><button class="icon-button" data-close-account aria-label="Close sign in">${icon('close')}</button></div><form id="auth-form">${field('email','Email','',{type:'email',required:true,placeholder:'you@example.com'})}${field('password','Password','',{type:'password',required:true})}<p id="auth-error" class="field-error" hidden></p><div class="account-options"><button class="button primary" type="submit" id="auth-submit">${registering?'Create account':'Sign in'}</button><button class="button text" type="button" id="auth-switch">${registering?'Already have an account? Sign in':'New here? Create an account'}</button></div>${registering?'':'<button type="button" class="button text small" id="forgot-password">Forgot your password?</button>'}</form><div class="account-info">${registering?'Use at least 8 characters. Your notes are private to your account.':'Not ready to sign in? Your local notes stay in this browser.'}</div>`;
+    dialog.innerHTML=`<div class="modal-header"><div><div class="modal-icon">${icon('cloud')}</div><h2 id="account-title">${registering?'Create account':'Sign in'}</h2><p>${registering?'Create an account to sync your papers and notes.':'Sync papers and notes across devices.'}</p></div><button class="icon-button" data-close-account aria-label="Close sign in">${icon('close')}</button></div><form id="auth-form">${field('email','Email','',{type:'email',required:true,placeholder:'you@example.com'})}${field('password','Password','',{type:'password',required:true})}<p id="auth-error" class="field-error" hidden></p><div class="account-options"><button class="button primary" type="submit" id="auth-submit">${registering?'Create account':'Sign in'}</button><button class="button text" type="button" id="auth-switch">${registering?'Already have an account? Sign in':'New here? Create an account'}</button></div>${registering?'':'<button type="button" class="button text small" id="forgot-password">Forgot your password?</button>'}</form><div class="account-info">${registering?'Use at least 8 characters. Your notes are private to your account.':'Not ready to sign in? Your local notes stay in this browser.'}</div>`;
     $('#field-email').autocomplete='email';$('#field-password').autocomplete=registering?'new-password':'current-password';
     if(registering)$('#field-password').minLength=8;
     $('#auth-switch').onclick=()=>{authMode=registering?'signin':'signup';showAccount();};
@@ -381,8 +379,7 @@ function showPasswordReset() {
 }
 
 function bindEvents() {
-  $('#topic-nav').onclick=event=>{const button=event.target.closest('[data-topic]');if(button){filters.topic=button.dataset.topic;render();closeNavigation();}};
-  $('#metrics').onclick=event=>{const button=event.target.closest('[data-status]');if(button){filters.status=button.dataset.status;render();}};
+  $('#topic-nav').onclick=event=>{const button=event.target.closest('[data-topic]');if(button){filters.topic=button.dataset.topic;render();}};
   $('#search').oninput=event=>{filters.query=event.target.value;render();};
   $('#status-filter').onchange=event=>{filters.status=event.target.value;render();};
   $('#sort-order').onchange=event=>{filters.sort=event.target.value;render();};
@@ -391,9 +388,7 @@ function bindEvents() {
   $('#table-body').onclick=event=>{const open=event.target.closest('[data-open]'), edit=event.target.closest('[data-edit]');if(open)openPaper(open.dataset.open);else if(edit)editCell(edit.dataset.id,edit.dataset.edit);};
   $('#table-body').onchange=event=>{const id=event.target.dataset.paperStatus;if(id)updatePaper(id,{status:event.target.value});};
   $('#new-paper').onclick=()=>openPaper();$('#clear-filters').onclick=resetFilters;
-  $('#account-button').onclick=$('#storage-help').onclick=showAccount;
-  $('#nav-toggle').onclick=()=>{$('#sidebar').classList.add('open');$('#sidebar-scrim').hidden=false;};
-  $('#sidebar-scrim').onclick=closeNavigation;
+  $('#account-button').onclick=showAccount;
   $('#more-button').onclick=()=>{const menu=$('#more-menu');menu.hidden=!menu.hidden;$('#more-button').setAttribute('aria-expanded',String(!menu.hidden));};
   document.addEventListener('click',event=>{if(!event.target.closest('.more-container')){$('#more-menu').hidden=true;$('#more-button').setAttribute('aria-expanded','false');}});
   $('#export-json').onclick=()=>{downloadBackup();$('#more-menu').hidden=true;};
@@ -411,7 +406,7 @@ function bindEvents() {
   };
   document.addEventListener('keydown',event=>{
     if(event.key==='/'&&!event.metaKey&&!event.ctrlKey&&!document.querySelector('dialog[open]')&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){event.preventDefault();$('#search').focus();}
-    if(event.key==='Escape'){closeNavigation();$('#more-menu').hidden=true;}
+    if(event.key==='Escape'){$('#more-menu').hidden=true;}
     if((event.ctrlKey||event.metaKey)&&event.key==='Enter'&&$('#cell-dialog').open){event.preventDefault();$('#cell-form').requestSubmit();}
   });
   window.addEventListener('online',()=>refreshCloud());
@@ -430,7 +425,7 @@ function bindEvents() {
 async function start() {
   hydrateIcons();bindEvents();
   try{
-    const response=await fetch(new URL('../data/papers.json',import.meta.url));if(!response.ok)throw new Error('The starter catalog could not be loaded.');
+    const response=await fetch(new URL('../data/papers.json?v=2',import.meta.url));if(!response.ok)throw new Error('The starter catalog could not be loaded.');
     catalog=(await response.json()).map(normalizePaper);
     const cached=loadCache(null);workspace=addCatalogPapers(cached?.workspace||initialWorkspace(catalog),catalog);dirty=cached?.dirty||false;
     $('#loading').hidden=true;render();

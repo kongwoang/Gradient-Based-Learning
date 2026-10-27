@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { initialWorkspace, normalizeWorkspace, normalizePaper, filteredPapers, addCatalogPapers, toMarkdown, safeURL, cacheKey } from '../docs/assets/library.js';
+import { initialWorkspace, normalizeWorkspace, normalizePaper, filteredPapers, addCatalogPapers, toMarkdown, safeURL, cacheKey, repositoryURL } from '../docs/assets/library.js';
 import { writeCloud, readCloud, SyncConflict } from '../docs/assets/cloud.js';
 const catalog=JSON.parse(fs.readFileSync(new URL('../docs/data/papers.json',import.meta.url)));
 
@@ -54,4 +54,14 @@ test('new workspaces insert; conflicting saves never silently overwrite',async()
 test('network errors are surfaced and invalid cloud data is rejected',async()=>{
   const offline=new Error('offline');await assert.rejects(()=>writeCloud(mockClient({data:null,error:offline}),'reader',initialWorkspace(catalog),1),/offline/);
   await assert.rejects(()=>readCloud(mockClient({data:{data:{schemaVersion:999},revision:1},error:null}),'reader'));
+});
+
+test('author repositories appear in saved libraries without replacing notes or using the library folder',()=>{
+  const seed=catalog.find(p=>p.method==='AGM');
+  const saved={...seed,code:'',notes:'Keep my notes',status:'Reading'};
+  assert.equal(repositoryURL(saved,catalog),'https://github.com/lihongcs/AGM');
+  assert.equal(saved.notes,'Keep my notes');assert.equal(saved.status,'Reading');assert.equal(saved.code,'');
+  assert.equal(repositoryURL({...saved,id:'custom-paper'},catalog),'');
+  assert.equal(repositoryURL({...saved,code:'https://example.com/author-code'},catalog),'https://example.com/author-code');
+  assert.equal(repositoryURL({...saved,code:'javascript:alert(1)'},catalog),'');
 });
