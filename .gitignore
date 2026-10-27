@@ -16,6 +16,8 @@ venv/
 
 # Reproduction data and generated artifacts
 data/
+!docs/data/
+!docs/data/papers.json
 datasets/
 checkpoints/
 outputs/
