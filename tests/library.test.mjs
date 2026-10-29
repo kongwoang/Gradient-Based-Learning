@@ -15,6 +15,27 @@ test('backups preserve multiline notes and validate before replacing anything',(
   for(const invalid of [{},{schemaVersion:2,papers:[]},{schemaVersion:1,papers:[original.papers[0],original.papers[0]]}])assert.throws(()=>normalizeWorkspace(invalid));
   assert.throws(()=>normalizeWorkspace({...original,papers:[{...original.papers[0],notes:{html:'bad'}}]}));
 });
+test('old columns merge into Notes once and survive editing, backup and export',()=>{
+  const old={...catalog[0],types:['Theoretical','Empirical'],issues:'Unstable updates\nunder imbalance',motivation:'Balance tasks',contributions:'Normalize gradients',ideas:'Try another dataset',notes:'My original notes',status:'Reading'};
+  const migrated=normalizePaper(old);
+  assert.equal(migrated.notes,'My original notes\n\nType\nTheoretical, Empirical\n\nRecent issues\nUnstable updates\nunder imbalance\n\nMotivations\nBalance tasks\n\nContributions\nNormalize gradients\n\nIdeas & next steps\nTry another dataset');
+  assert.equal(old.issues,'Unstable updates\nunder imbalance');
+  assert.deepEqual(normalizePaper(migrated),migrated);
+  assert.equal(normalizePaper({...migrated,notes:'Replacement note'}).notes,'Replacement note');
+  const state=initialWorkspace([old]);
+  assert.deepEqual(normalizeWorkspace(JSON.parse(JSON.stringify(state))),state);
+  assert.equal(filteredPapers(state.papers,{query:'another dataset'}).length,1);
+  assert.ok(toMarkdown(state).includes('| Paper | Topic | Venue | Status | Categories | Notes |'));
+  assert.equal(migrated.status,'Reading');assert.deepEqual(migrated.categories,old.categories);
+});
+test('merging previously valid full-length columns never truncates the notes',()=>{
+  const old={...catalog[0],notes:'N'.repeat(50000),issues:'I'.repeat(50000),motivation:'M'.repeat(50000),contributions:'C'.repeat(50000),ideas:'X'.repeat(50000)};
+  const merged=normalizePaper(old);
+  for(const field of ['notes','issues','motivation','contributions','ideas'])assert.ok(merged.notes.includes(old[field]));
+  assert.ok(merged.notes.length>250000);
+  assert.equal(normalizePaper(merged).notes,merged.notes);
+  assert.throws(()=>normalizePaper({...old,issues:{unexpected:'object'}}));
+});
 test('active content, credential-bearing URLs, invalid years and statuses are rejected',()=>{
   for(const url of ['javascript:alert(1)','data:text/html,test','https://name:secret@example.com']){assert.equal(safeURL(url),'');assert.throws(()=>normalizePaper({...catalog[0],source:url}));}
   assert.throws(()=>normalizePaper({...catalog[0],year:2}));assert.throws(()=>normalizePaper({...catalog[0],status:'invented'}));
@@ -41,6 +62,14 @@ function mockClient(response){
   const calls=[];const query={insert(value){calls.push(['insert',value]);return query;},update(value){calls.push(['update',value]);return query;},eq(...args){calls.push(['eq',...args]);return query;},select(...args){calls.push(['select',...args]);return query;},async maybeSingle(){return response;}};
   return {calls,from(name){calls.push(['from',name]);return query;}};
 }
+test('cloud reads and saves use the same merged Notes as local backups',async()=>{
+  const legacy={schemaVersion:1,papers:[{...catalog[0],notes:'Existing note',contributions:'Useful result'}],deletedIds:[],updatedAt:null};
+  const loaded=await readCloud(mockClient({data:{data:legacy,revision:2},error:null}),'reader');
+  assert.equal(loaded.data.papers[0].notes,'Existing note\n\nContributions\nUseful result');
+  const client=mockClient({data:{revision:3},error:null});
+  await writeCloud(client,'reader',loaded.data,2);
+  assert.deepEqual(client.calls.find(call=>call[0]==='update')[1].data,loaded.data);
+});
 test('cloud saves compare both owner and revision before updating',async()=>{
   const client=mockClient({data:{revision:4,updated_at:'2026-10-26'},error:null});
   const result=await writeCloud(client,'reader',initialWorkspace(catalog),3);

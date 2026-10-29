@@ -1,7 +1,9 @@
 export const STATUSES = ['To read', 'Reading', 'Read', 'Reproducing', 'Reproduced'];
 export const TOPICS = ['MTL', 'CL', 'Multimodal', 'DG', 'FL', 'Other'];
 export const TOPIC_NAMES = { MTL: 'Multi-task learning', CL: 'Continual learning', Multimodal: 'Multimodal learning', DG: 'Domain generalization', FL: 'Federated learning', Other: 'Other research' };
-export const NOTE_FIELDS = { issues: 'Recent issues', motivation: 'Motivations', contributions: 'Contributions', ideas: 'Ideas & next steps', notes: 'Reading notes' };
+export const NOTE_FIELDS = { notes: 'Notes' };
+export const NOTE_LIMIT = 300000;
+const LEGACY_NOTE_FIELDS = { issues: 'Recent issues', motivation: 'Motivations', contributions: 'Contributions', ideas: 'Ideas & next steps' };
 const ID = /^[a-z0-9][a-z0-9_-]{0,159}$/;
 const text = (value, name, max = 50000) => {
   if (value == null) return '';
@@ -34,7 +36,7 @@ export function pdfURL(paper) {
 export function normalizePaper(input) {
   if (!input || typeof input !== 'object' || !ID.test(input.id)) throw new Error('A paper has an invalid ID.');
   const result = { id: input.id };
-  for (const field of ['method', 'title', 'focus', ...Object.keys(NOTE_FIELDS)]) result[field] = text(input[field], field, ['method','title','focus'].includes(field) ? 2000 : 50000);
+  for (const field of ['method', 'title', 'focus']) result[field] = text(input[field], field, 2000);
   if (!result.title.trim()) throw new Error('Every paper needs a title.');
   result.topic = TOPICS.includes(input.topic) ? input.topic : 'Other';
   result.venue = text(input.venue, 'venue', 100);
@@ -47,6 +49,16 @@ export function normalizePaper(input) {
     if (!Array.isArray(values) || values.length > 20) throw new Error(`${field} must contain at most 20 tags.`);
     result[field] = [...new Set(values.map(value => text(value, field, 120).trim()).filter(Boolean))];
   }
+  // Fold the old columns into Notes once, including backups and cloud workspaces.
+  const sections = [text(input.notes, 'notes', NOTE_LIMIT)];
+  if (result.types.length) sections.push(`Type\n${result.types.join(', ')}`);
+  for (const [field, label] of Object.entries(LEGACY_NOTE_FIELDS)) {
+    const value = text(input[field], field);
+    if (value.trim()) sections.push(`${label}\n${value}`);
+    result[field] = '';
+  }
+  result.notes = text(sections.filter(value => value.trim()).join('\n\n'), 'notes', NOTE_LIMIT);
+  result.types = [];
   for (const field of ['source', 'pdf', 'code', 'folder']) {
     const value = text(input[field], field, 4000).trim();
     if (value && !safeURL(value)) throw new Error(`${field} needs a valid http or https link.`);
@@ -75,7 +87,7 @@ export function filteredPapers(papers, { query = '', topic = 'All', status = 'Al
   const result = papers.filter(paper => {
     if (topic !== 'All' && paper.topic !== topic) return false;
     if (status === 'Read' ? !['Read', 'Reproduced'].includes(paper.status) : status !== 'All' && paper.status !== status) return false;
-    const haystack = [paper.method, paper.title, paper.topic, paper.venue, paper.year, paper.focus, ...paper.categories, ...paper.types, ...Object.keys(NOTE_FIELDS).map(key => paper[key])].join(' ').toLocaleLowerCase();
+    const haystack = [paper.method, paper.title, paper.topic, paper.venue, paper.year, paper.focus, ...paper.categories, paper.notes].join(' ').toLocaleLowerCase();
     return words.every(word => haystack.includes(word));
   });
   if (sort === 'newest') result.sort((a, b) => (b.year || 0) - (a.year || 0) || a.method.localeCompare(b.method));
@@ -86,8 +98,8 @@ export function filteredPapers(papers, { query = '', topic = 'All', status = 'Al
 }
 export function toMarkdown(workspace) {
   const cell = value => String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('|','\\|').replace(/\r?\n/g,'<br>');
-  const columns = ['Paper', 'Topic', 'Venue', 'Status', 'Categories', 'Type', ...Object.values(NOTE_FIELDS)];
-  const rows = workspace.papers.map(p => [p.method || p.title, p.topic, [p.venue,p.year].filter(Boolean).join(' '), p.status, p.categories.join(', '), p.types.join(', '), ...Object.keys(NOTE_FIELDS).map(key=>p[key])]);
+  const columns = ['Paper', 'Topic', 'Venue', 'Status', 'Categories', 'Notes'];
+  const rows = workspace.papers.map(p => [p.method || p.title, p.topic, [p.venue,p.year].filter(Boolean).join(' '), p.status, p.categories.join(', '), p.notes]);
   return '# Reading Notes\n\n| ' + columns.join(' | ') + ' |\n|' + columns.map(()=>'---').join('|') + '|\n' + rows.map(row=>'| '+row.map(cell).join(' | ')+' |').join('\n') + '\n';
 }
 export const cacheKey = userId => `gradient.workspace.v1.${userId || 'guest'}`;

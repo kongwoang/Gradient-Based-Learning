@@ -1,4 +1,4 @@
-import { normalizeWorkspace } from './library.js';
+import { normalizeWorkspace } from './library.js?v=5';
 
 export class SyncConflict extends Error {
   constructor() { super('This workspace changed on another device. Choose which version to keep.'); this.name = 'SyncConflict'; }

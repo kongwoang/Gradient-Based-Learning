@@ -7,8 +7,8 @@
   <meta name="description" content="Papers, research notes, and reproductions.">
   <title>Gradient — Paper Library</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/styles.css?v=4">
-  <script type="module" src="./assets/app.js?v=3"></script>
+  <link rel="stylesheet" href="./assets/styles.css?v=5">
+  <script type="module" src="./assets/app.js?v=5"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to papers</a>
@@ -20,7 +20,7 @@
     <section class="page-heading"><div><h1 id="page-title">Paper library</h1><p>Papers, notes, and reproductions.</p></div><button class="button primary" id="new-paper"><span data-icon="plus"></span>Add paper</button></section>
     <nav id="topic-nav" class="topic-nav" aria-label="Paper topics"></nav>
         <section class="library-panel" aria-label="Papers">
-          <div class="view-row"><div class="view-tabs" role="tablist" aria-label="Table view"><button id="view-library" class="view-tab active" role="tab" aria-selected="true" data-view="library"><span data-icon="list"></span>Library</button><button id="view-research" class="view-tab" role="tab" aria-selected="false" data-view="research"><span data-icon="table"></span>Research notes</button></div></div>
+          <div class="view-row"><div class="view-tabs" role="tablist" aria-label="Table view"><button id="view-library" class="view-tab active" role="tab" aria-selected="true" data-view="library"><span data-icon="list"></span>Library</button><button id="view-research" class="view-tab" role="tab" aria-selected="false" data-view="research"><span data-icon="table"></span>Notes</button></div></div>
           <div class="toolbar"><label class="search-box"><span data-icon="search"></span><input id="search" type="search" placeholder="Search papers or notes…" aria-label="Search papers"><kbd>/</kbd></label><div class="filters"><label class="select-control"><span data-icon="filter"></span><select id="status-filter" aria-label="Filter by status"><option value="All">All statuses</option><option>To read</option><option>Reading</option><option>Read</option><option>Reproducing</option><option>Reproduced</option></select></label><label class="select-control"><span data-icon="sort"></span><select id="sort-order" aria-label="Sort papers"><option value="default">Default order</option><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name">Name A–Z</option><option value="updated">Recently edited</option></select></label><div class="more-container"><button class="icon-button" id="more-button" aria-label="Backup and export" aria-expanded="false"><span data-icon="more"></span></button><div class="dropdown" id="more-menu" hidden><button id="export-json"><span data-icon="download"></span>Export backup<span>JSON</span></button><button id="export-markdown"><span data-icon="file"></span>Export notes<span>MD</span></button><div class="menu-rule"></div><button id="import-json"><span data-icon="upload"></span>Import backup</button></div></div></div></div>
           <div id="notice" class="notice" hidden role="status"></div>
           <div class="table-scroll" id="table-scroll" tabindex="0" aria-label="Paper table. Scroll horizontally for more columns."><table id="paper-table"><thead id="table-head"></thead><tbody id="table-body"></tbody></table><div class="empty-state" id="empty-state" hidden><span data-icon="search"></span><h2>No papers found</h2><p>Try another search or clear your filters.</p><button class="button secondary" id="clear-filters">Clear filters</button></div><div id="loading" class="loading-state"><span class="spinner"></span>Opening your library…</div></div>
